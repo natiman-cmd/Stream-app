@@ -1,0 +1,26 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "MtIcTc1xMArmZPmVEv3AC"
+uri = "file://artifacts/streamapp/assets/images/icon.png"
+type = "image"
+title = "streaming app icon"
+
+[[generated]]
+id = "tAAdLpqDABHg5ZbJBtls8"
+uri = "file://artifacts/streamapp/assets/images/poster-scifi.png"
+type = "image"
+title = "scifi movie poster"
+
+[[generated]]
+id = "jWKQSHes_j4WoMvSlgqGh"
+uri = "file://artifacts/streamapp/assets/images/poster-action.png"
+type = "image"
+title = "action movie poster"
+
+[[generated]]
+id = "glU6_b3FjZ5xLesL4XHIh"
+uri = "file://artifacts/streamapp/assets/images/poster-drama.png"
+type = "image"
+title = "drama movie poster"
