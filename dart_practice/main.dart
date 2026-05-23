@@ -7,6 +7,8 @@ void main() {
   functionsExercise();
   listsExercise();
   classesExercise();
+  mapsExercise();
+  nullSafetyExercise();
 }
 
 // ── 1. Variables ─────────────────────────────────────────────────────────────
@@ -107,4 +109,96 @@ class Movie {
   }
 
   bool isHighlyRated() => rating >= 8.5;
+}
+
+// ── 5. Maps ───────────────────────────────────────────────────────────────────
+void mapsExercise() {
+  print('=== Maps ===');
+
+  // A Map stores key-value pairs
+  Map<String, dynamic> movie = {
+    'title': 'Interstellar',
+    'year': 2014,
+    'rating': 8.7,
+  };
+
+  print('Title: ${movie['title']}');
+  print('Year: ${movie['year']}');
+  print('Rating: ${movie['rating']}');
+
+  // Add a new key
+  movie['director'] = 'Christopher Nolan';
+  print('Director: ${movie['director']}');
+
+  // Loop through all key-value pairs
+  print('Full movie info:');
+  movie.forEach((key, value) {
+    print('  $key: $value');
+  });
+
+  // Check if a key exists
+  print('Has genre? ${movie.containsKey('genre')}');
+
+  // Map of movie genres to lists of movies
+  Map<String, List<String>> catalog = {
+    'Action': ['Mad Max', 'John Wick'],
+    'Sci-Fi': ['Dune', 'Interstellar'],
+    'Drama': ['Oppenheimer'],
+  };
+
+  print('Sci-Fi movies: ${catalog['Sci-Fi']}');
+
+  print('');
+}
+
+// ── 6. Null Safety ────────────────────────────────────────────────────────────
+void nullSafetyExercise() {
+  print('=== Null Safety ===');
+
+  // Non-nullable: must always have a value
+  String title = 'Inception';
+  print('Title: $title');
+
+  // Nullable: can be null, use ? to declare
+  String? genre;
+  print('Genre before: $genre');
+
+  genre = 'Sci-Fi';
+  print('Genre after: $genre');
+
+  // Null-aware operators
+  String? director;
+
+  // ?? provides a fallback if the value is null
+  String displayDirector = director ?? 'Unknown director';
+  print('Director: $displayDirector');
+
+  // ?. safely calls a method only if not null
+  String? description;
+  print('Length: ${description?.length}');
+
+  // ! asserts the value is not null (use carefully)
+  String? knownTitle = 'Dune';
+  print('Known title length: ${knownTitle!.length}');
+
+  // Nullable in a class field
+  StreamUser user1 = StreamUser(name: 'Alice', subscription: 'Premium');
+  StreamUser user2 = StreamUser(name: 'Bob', subscription: null);
+
+  user1.showStatus();
+  user2.showStatus();
+
+  print('');
+}
+
+class StreamUser {
+  String name;
+  String? subscription;
+
+  StreamUser({required this.name, required this.subscription});
+
+  void showStatus() {
+    String plan = subscription ?? 'Free';
+    print('$name is on the $plan plan');
+  }
 }
