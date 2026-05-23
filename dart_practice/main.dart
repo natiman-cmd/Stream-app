@@ -1,4 +1,4 @@
-void main() {
+Future<void> main() async {
   print('=== Hello World ===');
   print('Hello, World!');
   print('');
@@ -9,7 +9,9 @@ void main() {
   classesExercise();
   mapsExercise();
   nullSafetyExercise();
+  await asyncExercise();
 }
+
 
 // ── 1. Variables ─────────────────────────────────────────────────────────────
 void variablesExercise() {
@@ -201,4 +203,76 @@ class StreamUser {
     String plan = subscription ?? 'Free';
     print('$name is on the $plan plan');
   }
+}
+
+// ── 7. Async / Await ──────────────────────────────────────────────────────────
+Future<void> asyncExercise() async {
+  print('=== Async / Await ===');
+
+  // A Future represents a value that will be available later
+  // await pauses here until the Future completes
+  print('Fetching featured movie...');
+  String featured = await fetchFeaturedMovie();
+  print('Featured: $featured');
+
+  // Fetch multiple movies concurrently with Future.wait
+  print('Loading movie catalog...');
+  List<MovieData> catalog = await fetchMovieCatalog();
+  print('Loaded ${catalog.length} movies:');
+  for (MovieData m in catalog) {
+    print('  ${m.title} (${m.genre}) — \$${m.price}/mo');
+  }
+
+  // Handle errors with try/catch on async calls
+  print('Fetching user profile...');
+  try {
+    String profile = await fetchUserProfile('user_123');
+    print('Profile: $profile');
+  } catch (e) {
+    print('Error loading profile: $e');
+  }
+
+  // Simulate a failed request
+  print('Fetching invalid user...');
+  try {
+    String profile = await fetchUserProfile('bad_id');
+    print('Profile: $profile');
+  } catch (e) {
+    print('Caught error: $e');
+  }
+
+  print('');
+}
+
+// Simulates a network call that takes time (like fetching from a movie API)
+Future<String> fetchFeaturedMovie() async {
+  await Future.delayed(Duration(milliseconds: 500));
+  return 'Interstellar — Now Streaming';
+}
+
+// Simulates fetching a list of movies from a catalog API
+Future<List<MovieData>> fetchMovieCatalog() async {
+  await Future.delayed(Duration(milliseconds: 300));
+  return [
+    MovieData(title: 'Inception', genre: 'Sci-Fi', price: 9.99),
+    MovieData(title: 'Dune', genre: 'Sci-Fi', price: 12.99),
+    MovieData(title: 'Oppenheimer', genre: 'Drama', price: 11.99),
+  ];
+}
+
+// Simulates a user profile fetch that can fail
+Future<String> fetchUserProfile(String userId) async {
+  await Future.delayed(Duration(milliseconds: 200));
+  if (userId != 'user_123') {
+    throw Exception('User not found: $userId');
+  }
+  return 'Alice — Premium subscriber since 2024';
+}
+
+class MovieData {
+  String title;
+  String genre;
+  double price;
+
+  MovieData({required this.title, required this.genre, required this.price});
 }
