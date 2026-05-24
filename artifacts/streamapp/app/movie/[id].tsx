@@ -3,6 +3,7 @@ import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import {
+  FlatList,
   Image,
   Platform,
   ScrollView,
@@ -15,6 +16,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { MovieCard } from "@/components/MovieCard";
 import { useWatchlist } from "@/context/WatchlistContext";
 import { MOVIES } from "@/data/movies";
 import { useColors } from "@/hooks/useColors";
@@ -37,6 +39,10 @@ export default function MovieDetailScreen() {
   }
 
   const bookmarked = isInWatchlist(movie.id);
+
+  const moreLikeThis = MOVIES.filter(
+    (m) => m.genre === movie.genre && m.id !== movie.id
+  );
 
   const handlePlay = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -69,6 +75,7 @@ export default function MovieDetailScreen() {
             insets.bottom + (Platform.OS === "web" ? 34 : 40),
         }}
       >
+        {/* Poster */}
         <View style={styles.posterContainer}>
           <Image
             source={movie.poster}
@@ -79,10 +86,7 @@ export default function MovieDetailScreen() {
           <TouchableOpacity
             style={[
               styles.backBtn,
-              {
-                top:
-                  (Platform.OS === "web" ? 67 : insets.top) + 10,
-              },
+              { top: (Platform.OS === "web" ? 67 : insets.top) + 10 },
             ]}
             onPress={() => router.back()}
             activeOpacity={0.8}
@@ -91,6 +95,7 @@ export default function MovieDetailScreen() {
           </TouchableOpacity>
         </View>
 
+        {/* Info */}
         <View style={styles.info}>
           <Text style={[styles.genreLabel, { color: colors.primary }]}>
             {movie.genre.toUpperCase()}
@@ -102,6 +107,7 @@ export default function MovieDetailScreen() {
             {movie.year} · {movie.duration} · ★ {movie.rating}
           </Text>
 
+          {/* Actions */}
           <View style={styles.actions}>
             <TouchableOpacity
               style={[styles.playBtn, { backgroundColor: colors.primary }]}
@@ -124,7 +130,7 @@ export default function MovieDetailScreen() {
               activeOpacity={0.8}
             >
               <Feather
-                name={bookmarked ? "bookmark" : "bookmark"}
+                name="bookmark"
                 size={20}
                 color={bookmarked ? "#fff" : colors.foreground}
               />
@@ -152,13 +158,38 @@ export default function MovieDetailScreen() {
             </View>
           )}
 
-          <Text style={[styles.synopsisLabel, { color: colors.foreground }]}>
+          {/* Synopsis */}
+          <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
             Synopsis
           </Text>
           <Text style={[styles.synopsis, { color: colors.mutedForeground }]}>
             {movie.description}
           </Text>
         </View>
+
+        {/* More Like This */}
+        {moreLikeThis.length > 0 && (
+          <View style={styles.moreLikeThis}>
+            <Text
+              style={[styles.sectionTitle, { color: colors.foreground, paddingHorizontal: 20 }]}
+            >
+              More Like This
+            </Text>
+            <FlatList
+              data={moreLikeThis}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={styles.moreLikeThisList}
+              renderItem={({ item }) => (
+                <View style={styles.moreLikeThisCard}>
+                  <MovieCard movie={item} width={120} height={175} />
+                </View>
+              )}
+            />
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -253,14 +284,27 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: "Inter_500Medium",
   },
-  synopsisLabel: {
+  sectionTitle: {
     fontSize: 18,
     fontFamily: "Inter_600SemiBold",
     marginTop: 10,
+    marginBottom: 2,
   },
   synopsis: {
     fontSize: 15,
     fontFamily: "Inter_400Regular",
     lineHeight: 24,
+  },
+  moreLikeThis: {
+    marginTop: 8,
+    paddingBottom: 8,
+  },
+  moreLikeThisList: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    gap: 12,
+  },
+  moreLikeThisCard: {
+    marginRight: 12,
   },
 });
