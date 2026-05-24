@@ -1,5 +1,5 @@
 import { Feather } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   FlatList,
   Platform,
@@ -17,11 +17,53 @@ import { useColors } from "@/hooks/useColors";
 
 const GENRES = ["All", "Sci-Fi", "Action", "Drama"];
 
+function HighlightText({
+  text,
+  query,
+  baseColor,
+  highlightColor,
+}: {
+  text: string;
+  query: string;
+  baseColor: string;
+  highlightColor: string;
+}) {
+  if (!query) {
+    return (
+      <Text style={{ color: baseColor, fontSize: 11, fontFamily: "Inter_500Medium" }} numberOfLines={1}>
+        {text}
+      </Text>
+    );
+  }
+
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) {
+    return (
+      <Text style={{ color: baseColor, fontSize: 11, fontFamily: "Inter_500Medium" }} numberOfLines={1}>
+        {text}
+      </Text>
+    );
+  }
+
+  const before = text.slice(0, idx);
+  const match = text.slice(idx, idx + query.length);
+  const after = text.slice(idx + query.length);
+
+  return (
+    <Text style={{ fontSize: 11, fontFamily: "Inter_500Medium" }} numberOfLines={1}>
+      <Text style={{ color: baseColor }}>{before}</Text>
+      <Text style={{ color: highlightColor, fontFamily: "Inter_700Bold" }}>{match}</Text>
+      <Text style={{ color: baseColor }}>{after}</Text>
+    </Text>
+  );
+}
+
 export default function SearchScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const [query, setQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("All");
+  const inputRef = useRef<TextInput>(null);
 
   const topPadding = Platform.OS === "web" ? 67 : insets.top + 12;
 
@@ -32,28 +74,36 @@ export default function SearchScreen() {
     return matchesQuery && matchesGenre;
   });
 
+  const resultLabel =
+    query.length > 0 || selectedGenre !== "All"
+      ? `${filtered.length} result${filtered.length !== 1 ? "s" : ""}`
+      : `${MOVIES.length} movies`;
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { paddingTop: topPadding }]}>
-        <View
-          style={[styles.searchBar, { backgroundColor: colors.secondary }]}
-        >
+        <View style={[styles.searchBar, { backgroundColor: colors.secondary }]}>
           <Feather name="search" size={18} color={colors.mutedForeground} />
           <TextInput
+            ref={inputRef}
             style={[styles.input, { color: colors.foreground }]}
             placeholder="Search movies..."
             placeholderTextColor={colors.mutedForeground}
             value={query}
             onChangeText={setQuery}
             autoCorrect={false}
+            autoCapitalize="none"
+            returnKeyType="search"
+            clearButtonMode="while-editing"
           />
-          {query.length > 0 && (
+          {query.length > 0 && Platform.OS !== "ios" && (
             <TouchableOpacity onPress={() => setQuery("")}>
               <Feather name="x" size={18} color={colors.mutedForeground} />
             </TouchableOpacity>
           )}
         </View>
-        <View style={styles.genres}>
+
+        <View style={styles.genreRow}>
           {GENRES.map((g) => (
             <TouchableOpacity
               key={g}
@@ -62,9 +112,7 @@ export default function SearchScreen() {
                 styles.genrePill,
                 {
                   backgroundColor:
-                    selectedGenre === g
-                      ? colors.primary
-                      : colors.secondary,
+                    selectedGenre === g ? colors.primary : colors.secondary,
                 },
               ]}
             >
@@ -74,12 +122,20 @@ export default function SearchScreen() {
             </TouchableOpacity>
           ))}
         </View>
+
+        <Text style={[styles.resultCount, { color: colors.mutedForeground }]}>
+          {resultLabel}
+        </Text>
       </View>
+
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
         numColumns={3}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        scrollEnabled={!!filtered.length}
         contentContainerStyle={[
           styles.grid,
           {
@@ -90,13 +146,22 @@ export default function SearchScreen() {
         renderItem={({ item }) => (
           <View style={styles.gridItem}>
             <MovieCard movie={item} width={106} height={156} />
+            <HighlightText
+              text={item.title}
+              query={query}
+              baseColor={colors.mutedForeground}
+              highlightColor={colors.foreground}
+            />
           </View>
         )}
         ListEmptyComponent={
           <View style={styles.empty}>
             <Feather name="film" size={48} color={colors.mutedForeground} />
+            <Text style={[styles.emptyTitle, { color: colors.foreground }]}>
+              No results
+            </Text>
             <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>
-              No movies found
+              Try a different title or genre
             </Text>
           </View>
         }
@@ -109,7 +174,7 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   header: {
     paddingHorizontal: 16,
-    paddingBottom: 12,
+    paddingBottom: 4,
   },
   searchBar: {
     flexDirection: "row",
@@ -125,9 +190,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: "Inter_400Regular",
   },
-  genres: {
+  genreRow: {
     flexDirection: "row",
     gap: 8,
+    marginBottom: 10,
   },
   genrePill: {
     paddingHorizontal: 14,
@@ -138,23 +204,33 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: "Inter_500Medium",
   },
+  resultCount: {
+    fontSize: 12,
+    fontFamily: "Inter_400Regular",
+    marginBottom: 8,
+  },
   grid: {
     paddingHorizontal: 12,
-    paddingTop: 8,
+    paddingTop: 4,
   },
   gridItem: {
     flex: 1,
     margin: 4,
     maxWidth: "33.33%",
+    gap: 5,
   },
   empty: {
     alignItems: "center",
     justifyContent: "center",
     paddingTop: 80,
-    gap: 12,
+    gap: 8,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontFamily: "Inter_600SemiBold",
   },
   emptyText: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: "Inter_400Regular",
   },
 });
