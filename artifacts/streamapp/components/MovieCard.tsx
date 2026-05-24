@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import type { Movie } from "@/data/movies";
 import { useColors } from "@/hooks/useColors";
@@ -9,9 +9,10 @@ interface Props {
   movie: Movie;
   width?: number;
   height?: number;
+  showMeta?: boolean;
 }
 
-export function MovieCard({ movie, width = 110, height = 160 }: Props) {
+export function MovieCard({ movie, width = 110, height = 160, showMeta = true }: Props) {
   const colors = useColors();
   const router = useRouter();
 
@@ -39,6 +40,27 @@ export function MovieCard({ movie, width = 110, height = 160 }: Props) {
           />
         </View>
       )}
+      {showMeta && (
+        <View style={[styles.meta, { width }]}>
+          <Text
+            style={[styles.title, { color: colors.foreground }]}
+            numberOfLines={1}
+          >
+            {movie.title}
+          </Text>
+          <View style={styles.subRow}>
+            <Text style={[styles.genre, { color: colors.mutedForeground }]}>
+              {movie.genre}
+            </Text>
+            <View style={styles.ratingRow}>
+              <Text style={[styles.star, { color: colors.primary }]}>★</Text>
+              <Text style={[styles.rating, { color: colors.mutedForeground }]}>
+                {movie.rating}
+              </Text>
+            </View>
+          </View>
+        </View>
+      )}
     </TouchableOpacity>
   );
 }
@@ -57,5 +79,34 @@ const styles = StyleSheet.create({
   progressFill: {
     height: 3,
     borderRadius: 2,
+  },
+  meta: {
+    marginTop: 6,
+    gap: 3,
+  },
+  title: {
+    fontSize: 12,
+    fontFamily: "Inter_600SemiBold",
+  },
+  subRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  genre: {
+    fontSize: 11,
+    fontFamily: "Inter_400Regular",
+  },
+  ratingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 2,
+  },
+  star: {
+    fontSize: 11,
+  },
+  rating: {
+    fontSize: 11,
+    fontFamily: "Inter_400Regular",
   },
 });

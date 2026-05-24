@@ -145,7 +145,7 @@ export default function SearchScreen() {
         ]}
         renderItem={({ item }) => (
           <View style={styles.gridItem}>
-            <MovieCard movie={item} width={106} height={156} />
+            <MovieCard movie={item} width={106} height={156} showMeta={false} />
             <HighlightText
               text={item.title}
               query={query}
