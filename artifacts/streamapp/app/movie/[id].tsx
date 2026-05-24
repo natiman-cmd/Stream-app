@@ -6,6 +6,7 @@ import {
   Image,
   Platform,
   ScrollView,
+  Share,
   StatusBar,
   StyleSheet,
   Text,
@@ -14,6 +15,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useWatchlist } from "@/context/WatchlistContext";
 import { MOVIES } from "@/data/movies";
 import { useColors } from "@/hooks/useColors";
 
@@ -22,6 +24,7 @@ export default function MovieDetailScreen() {
   const router = useRouter();
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const { isInWatchlist, toggleWatchlist } = useWatchlist();
 
   const movie = MOVIES.find((m) => m.id === id);
 
@@ -33,21 +36,37 @@ export default function MovieDetailScreen() {
     );
   }
 
+  const bookmarked = isInWatchlist(movie.id);
+
   const handlePlay = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   };
 
   const handleBookmark = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    toggleWatchlist(movie);
+    Haptics.notificationAsync(
+      bookmarked
+        ? Haptics.NotificationFeedbackType.Warning
+        : Haptics.NotificationFeedbackType.Success
+    );
+  };
+
+  const handleShare = () => {
+    Share.share({ message: `Watch ${movie.title} on StreamApp!` });
   };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingBottom: insets.bottom + (Platform.OS === "web" ? 34 : 40),
+          paddingBottom:
+            insets.bottom + (Platform.OS === "web" ? 34 : 40),
         }}
       >
         <View style={styles.posterContainer}>
@@ -58,7 +77,13 @@ export default function MovieDetailScreen() {
           />
           <View style={styles.posterOverlay} />
           <TouchableOpacity
-            style={[styles.backBtn, { top: (Platform.OS === "web" ? 67 : insets.top) + 10 }]}
+            style={[
+              styles.backBtn,
+              {
+                top:
+                  (Platform.OS === "web" ? 67 : insets.top) + 10,
+              },
+            ]}
             onPress={() => router.back()}
             activeOpacity={0.8}
           >
@@ -87,19 +112,45 @@ export default function MovieDetailScreen() {
               <Text style={styles.playText}>Play Now</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.iconBtn, { backgroundColor: colors.secondary }]}
+              style={[
+                styles.iconBtn,
+                {
+                  backgroundColor: bookmarked
+                    ? colors.primary
+                    : colors.secondary,
+                },
+              ]}
               onPress={handleBookmark}
               activeOpacity={0.8}
             >
-              <Feather name="bookmark" size={20} color={colors.foreground} />
+              <Feather
+                name={bookmarked ? "bookmark" : "bookmark"}
+                size={20}
+                color={bookmarked ? "#fff" : colors.foreground}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.iconBtn, { backgroundColor: colors.secondary }]}
+              onPress={handleShare}
               activeOpacity={0.8}
             >
               <Feather name="share-2" size={20} color={colors.foreground} />
             </TouchableOpacity>
           </View>
+
+          {bookmarked && (
+            <View
+              style={[
+                styles.savedBadge,
+                { backgroundColor: "rgba(229, 9, 20, 0.12)" },
+              ]}
+            >
+              <Feather name="check" size={14} color={colors.primary} />
+              <Text style={[styles.savedText, { color: colors.primary }]}>
+                Saved to My List
+              </Text>
+            </View>
+          )}
 
           <Text style={[styles.synopsisLabel, { color: colors.foreground }]}>
             Synopsis
@@ -187,6 +238,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+  },
+  savedBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    alignSelf: "flex-start",
+    marginTop: 4,
+  },
+  savedText: {
+    fontSize: 13,
+    fontFamily: "Inter_500Medium",
   },
   synopsisLabel: {
     fontSize: 18,
