@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from "react-native";
+
 export interface Movie {
   id: string;
   title: string;
@@ -6,14 +8,14 @@ export interface Movie {
   rating: number;
   duration: string;
   description: string;
-  poster: ReturnType<typeof require>;
+  poster: ImageSourcePropType;
   isFeatured?: boolean;
   progress?: number;
 }
 
-const posterScifi = require("../assets/images/poster-scifi.png");
-const posterAction = require("../assets/images/poster-action.png");
-const posterDrama = require("../assets/images/poster-drama.png");
+const posterScifi: ImageSourcePropType = require("../assets/images/poster-scifi.png");
+const posterAction: ImageSourcePropType = require("../assets/images/poster-action.png");
+const posterDrama: ImageSourcePropType = require("../assets/images/poster-drama.png");
 
 export const MOVIES: Movie[] = [
   {
