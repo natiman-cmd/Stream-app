@@ -9,6 +9,8 @@ export interface Movie {
   duration: string;
   description: string;
   poster: ImageSourcePropType;
+  posterUrl?: string;
+  videoUrl?: string;
   isFeatured?: boolean;
   progress?: number;
 }
@@ -28,7 +30,7 @@ export const MOVIES: Movie[] = [
     description:
       "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
     poster: posterScifi,
-    isFeatured: true,
+    isFeatured: false,
   },
   {
     id: "2",
@@ -154,18 +156,20 @@ export const MOVIES: Movie[] = [
       "Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.",
     poster: posterDrama,
   },
+  {
+    id: "13",
+    title: "Ethiopian Drama",
+    genre: "Drama",
+    year: 2026,
+    rating: 0,
+    duration: "1h 45m",
+    description: "A local Ethiopian drama movie.",
+    poster: { uri: "https://picsum.photos/400/600" },
+    posterUrl: "https://picsum.photos/400/600",
+    isFeatured: true,
+  },
 ];
 
-export const FEATURED_MOVIE = MOVIES.find((m) => m.isFeatured) ?? MOVIES[0];
-export const TRENDING = MOVIES.slice(0, 6);
-export const NEW_RELEASES = [
-  MOVIES[3],
-  MOVIES[6],
-  MOVIES[10],
-  MOVIES[11],
-  MOVIES[1],
-  MOVIES[8],
-];
-export const CONTINUE_WATCHING = MOVIES.filter(
-  (m) => m.progress !== undefined
-);
+export function getPosterSource(movie: Movie): ImageSourcePropType {
+  return movie.posterUrl ? { uri: movie.posterUrl } : movie.poster;
+}

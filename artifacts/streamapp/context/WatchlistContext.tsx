@@ -7,7 +7,8 @@ import React, {
   useState,
 } from "react";
 
-import { MOVIES, type Movie } from "@/data/movies";
+import type { Movie } from "@/data/movies";
+import { useCatalog } from "@/context/CatalogContext";
 
 const STORAGE_KEY = "@streamapp/watchlist";
 
@@ -22,6 +23,7 @@ interface WatchlistContextValue {
 const WatchlistContext = createContext<WatchlistContextValue | null>(null);
 
 export function WatchlistProvider({ children }: { children: React.ReactNode }) {
+  const { movies } = useCatalog();
   const [watchlistIds, setWatchlistIds] = useState<string[]>([]);
 
   useEffect(() => {
@@ -83,7 +85,7 @@ export function WatchlistProvider({ children }: { children: React.ReactNode }) {
   );
 
   const watchlist = watchlistIds
-    .map((id) => MOVIES.find((m) => m.id === id))
+    .map((id) => movies.find((m) => m.id === id))
     .filter((m): m is Movie => m !== undefined);
 
   return (

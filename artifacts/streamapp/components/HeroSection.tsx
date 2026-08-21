@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import type { Movie } from "@/data/movies";
+import { getPosterSource, type Movie } from "@/data/movies";
 import { useColors } from "@/hooks/useColors";
 
 const { width } = Dimensions.get("window");
@@ -31,7 +31,7 @@ export function HeroSection({ movie }: Props) {
   return (
     <View style={[styles.container, { height: HERO_HEIGHT + topPad }]}>
       <Image
-        source={movie.poster}
+        source={getPosterSource(movie)}
         style={styles.backdrop}
         resizeMode="cover"
       />

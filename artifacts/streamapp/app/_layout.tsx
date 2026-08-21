@@ -14,6 +14,7 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { CatalogProvider } from "@/context/CatalogContext";
 import { ProfileProvider } from "@/context/ProfileContext";
 import { WatchlistProvider } from "@/context/WatchlistContext";
 
@@ -52,13 +53,15 @@ export default function RootLayout() {
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <ProfileProvider>
-          <WatchlistProvider>
-            <GestureHandlerRootView>
-              <KeyboardProvider>
-                <RootLayoutNav />
-              </KeyboardProvider>
-            </GestureHandlerRootView>
-          </WatchlistProvider>
+            <CatalogProvider>
+              <WatchlistProvider>
+                <GestureHandlerRootView>
+                  <KeyboardProvider>
+                    <RootLayoutNav />
+                  </KeyboardProvider>
+                </GestureHandlerRootView>
+              </WatchlistProvider>
+            </CatalogProvider>
           </ProfileProvider>
         </QueryClientProvider>
       </ErrorBoundary>

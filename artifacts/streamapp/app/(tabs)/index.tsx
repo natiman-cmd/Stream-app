@@ -4,15 +4,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { CategoryRow } from "@/components/CategoryRow";
 import { HeroSection } from "@/components/HeroSection";
-import {
-  CONTINUE_WATCHING,
-  FEATURED_MOVIE,
-  NEW_RELEASES,
-  TRENDING,
-} from "@/data/movies";
+import { useCatalog } from "@/context/CatalogContext";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const { movies } = useCatalog();
+  const featuredMovie = movies.find((movie) => movie.isFeatured) ?? movies[0];
+  const continueWatching = movies.filter((movie) => movie.progress !== undefined);
+  const trending = movies.slice(0, 6);
+  const newReleases = movies.slice(-6).reverse();
 
   return (
     <View style={styles.container}>
@@ -29,12 +29,12 @@ export default function HomeScreen() {
             insets.bottom + (Platform.OS === "web" ? 34 : 90),
         }}
       >
-        <HeroSection movie={FEATURED_MOVIE} />
-        {CONTINUE_WATCHING.length > 0 && (
-          <CategoryRow title="Continue Watching" movies={CONTINUE_WATCHING} />
+        {featuredMovie && <HeroSection movie={featuredMovie} />}
+        {continueWatching.length > 0 && (
+          <CategoryRow title="Continue Watching" movies={continueWatching} />
         )}
-        <CategoryRow title="Trending Now" movies={TRENDING} />
-        <CategoryRow title="New Releases" movies={NEW_RELEASES} />
+        <CategoryRow title="Trending Now" movies={trending} />
+        <CategoryRow title="New Releases" movies={newReleases} />
       </ScrollView>
     </View>
   );

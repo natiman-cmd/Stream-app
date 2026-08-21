@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import type { Movie } from "@/data/movies";
+import { getPosterSource, type Movie } from "@/data/movies";
 import { useColors } from "@/hooks/useColors";
 
 interface Props {
@@ -34,7 +34,7 @@ export function MovieCard({
     >
       <View style={{ width, height, borderRadius: colors.radius, overflow: "hidden" }}>
         <Image
-          source={movie.poster}
+          source={getPosterSource(movie)}
           style={[styles.poster, { width, height }]}
           resizeMode="cover"
         />

@@ -12,7 +12,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { MovieCard } from "@/components/MovieCard";
-import { MOVIES } from "@/data/movies";
+import { useCatalog } from "@/context/CatalogContext";
 import { useColors } from "@/hooks/useColors";
 
 const GENRES = ["All", "Sci-Fi", "Action", "Drama"];
@@ -64,10 +64,11 @@ export default function SearchScreen() {
   const [query, setQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("All");
   const inputRef = useRef<TextInput>(null);
+  const { movies } = useCatalog();
 
   const topPadding = Platform.OS === "web" ? 67 : insets.top + 12;
 
-  const filtered = MOVIES.filter((m) => {
+  const filtered = movies.filter((m) => {
     const matchesQuery =
       query === "" || m.title.toLowerCase().includes(query.toLowerCase());
     const matchesGenre = selectedGenre === "All" || m.genre === selectedGenre;
@@ -77,7 +78,7 @@ export default function SearchScreen() {
   const resultLabel =
     query.length > 0 || selectedGenre !== "All"
       ? `${filtered.length} result${filtered.length !== 1 ? "s" : ""}`
-      : `${MOVIES.length} movies`;
+      : `${movies.length} movies`;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>

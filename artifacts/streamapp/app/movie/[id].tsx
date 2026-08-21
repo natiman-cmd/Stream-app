@@ -17,8 +17,9 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { MovieCard } from "@/components/MovieCard";
+import { useCatalog } from "@/context/CatalogContext";
+import { getPosterSource } from "@/data/movies";
 import { useWatchlist } from "@/context/WatchlistContext";
-import { MOVIES } from "@/data/movies";
 import { useColors } from "@/hooks/useColors";
 
 export default function MovieDetailScreen() {
@@ -27,8 +28,9 @@ export default function MovieDetailScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
+  const { movies } = useCatalog();
 
-  const movie = MOVIES.find((m) => m.id === id);
+  const movie = movies.find((m) => m.id === id);
 
   if (!movie) {
     return (
@@ -40,7 +42,7 @@ export default function MovieDetailScreen() {
 
   const bookmarked = isInWatchlist(movie.id);
 
-  const moreLikeThis = MOVIES.filter(
+  const moreLikeThis = movies.filter(
     (m) => m.genre === movie.genre && m.id !== movie.id
   );
 
@@ -78,7 +80,7 @@ export default function MovieDetailScreen() {
         {/* Poster */}
         <View style={styles.posterContainer}>
           <Image
-            source={movie.poster}
+            source={getPosterSource(movie)}
             style={styles.poster}
             resizeMode="cover"
           />

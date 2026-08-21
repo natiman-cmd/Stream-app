@@ -13,8 +13,8 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useProfile } from "@/context/ProfileContext";
+import { useCatalog } from "@/context/CatalogContext";
 import { useWatchlist } from "@/context/WatchlistContext";
-import { CONTINUE_WATCHING } from "@/data/movies";
 import { useColors } from "@/hooks/useColors";
 
 const MENU_ITEMS: { icon: string; label: string }[] = [
@@ -29,6 +29,8 @@ export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const { profile, updateName } = useProfile();
   const { watchlist } = useWatchlist();
+  const { movies } = useCatalog();
+  const inProgressCount = movies.filter((movie) => movie.progress !== undefined).length;
   const topPadding = Platform.OS === "web" ? 67 : insets.top + 12;
 
   const [editing, setEditing] = useState(false);
@@ -146,7 +148,7 @@ export default function ProfileScreen() {
         <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
         <View style={styles.statItem}>
           <Text style={[styles.statNumber, { color: colors.foreground }]}>
-            {CONTINUE_WATCHING.length}
+            {inProgressCount}
           </Text>
           <Text style={[styles.statLabel, { color: colors.mutedForeground }]}>
             In Progress

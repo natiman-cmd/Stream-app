@@ -28,6 +28,10 @@ function NativeTabLayout() {
         <Icon sf={{ default: "person", selected: "person.fill" }} />
         <Label>Profile</Label>
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="admin">
+        <Icon sf={{ default: "gear", selected: "gearshape.fill" }} />
+        <Label>Admin</Label>
+      </NativeTabs.Trigger>
     </NativeTabs>
   );
 }
@@ -115,6 +119,18 @@ function ClassicTabLayout() {
               <SymbolView name="person" tintColor={color} size={24} />
             ) : (
               <Feather name="user" size={22} color={color} />
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name="admin"
+        options={{
+          title: "Admin",
+          tabBarIcon: ({ color }) =>
+            isIOS ? (
+              <SymbolView name="gearshape" tintColor={color} size={24} />
+            ) : (
+              <Feather name="shield" size={22} color={color} />
             ),
         }}
       />
