@@ -1,0 +1,19 @@
+{
+  "name": "StreamApp",
+  "short_name": "StreamApp",
+  "description": "A personal movie streaming experience for discovering and saving films.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#030914",
+  "theme_color": "#00f0ff",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

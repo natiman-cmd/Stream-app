@@ -20,6 +20,8 @@
       "package": "com.streamapp.app"
     },
     "web": {
+      "bundler": "metro",
+      "output": "single",
       "favicon": "./assets/images/icon.png"
     },
     "plugins": [
