@@ -5,17 +5,19 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CategoryRow } from "@/components/CategoryRow";
 import { HeroSection } from "@/components/HeroSection";
 import { useCatalog } from "@/context/CatalogContext";
+import { useColors } from "@/hooks/useColors";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const { movies } = useCatalog();
+  const colors = useColors();
   const featuredMovie = movies.find((movie) => movie.isFeatured) ?? movies[0];
   const continueWatching = movies.filter((movie) => movie.progress !== undefined);
   const trending = movies.slice(0, 6);
   const newReleases = movies.slice(-6).reverse();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar
         barStyle="light-content"
         backgroundColor="transparent"
@@ -43,7 +45,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0f0f0f",
   },
   scroll: {
     flex: 1,

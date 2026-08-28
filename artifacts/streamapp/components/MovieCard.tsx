@@ -35,7 +35,7 @@ export function MovieCard({
       <View style={{ width, height, borderRadius: colors.radius, overflow: "hidden" }}>
         <Image
           source={getPosterSource(movie)}
-          style={[styles.poster, { width, height }]}
+          style={[styles.poster, { width, height, backgroundColor: colors.card }]}
           resizeMode="cover"
         />
 
@@ -53,7 +53,19 @@ export function MovieCard({
               />
             </View>
 
-            <View style={[styles.badge, { backgroundColor: colors.primary }]}>
+            <View
+              style={[
+                styles.badge,
+                {
+                  backgroundColor: colors.primary,
+                  shadowColor: colors.primary,
+                  shadowOpacity: 0.75,
+                  shadowRadius: 9,
+                  shadowOffset: { width: 0, height: 0 },
+                  elevation: 8,
+                },
+              ]}
+            >
               <Text style={styles.badgeText}>{percent}%</Text>
             </View>
           </>
@@ -87,7 +99,6 @@ export function MovieCard({
 
 const styles = StyleSheet.create({
   poster: {
-    backgroundColor: "#1c1c1e",
   },
   progressBarBg: {
     position: "absolute",

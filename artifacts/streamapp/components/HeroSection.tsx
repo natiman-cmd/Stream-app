@@ -36,33 +36,43 @@ export function HeroSection({ movie }: Props) {
         resizeMode="cover"
       />
       <View style={styles.dimOverlay} />
-      <View style={styles.bottomFade} />
+      <View style={[styles.bottomFade, { backgroundColor: colors.background }]} />
 
       <View style={[styles.content, { paddingTop: topPad + 12 }]}>
         <View style={styles.spacer} />
         <Text style={[styles.genre, { color: colors.primary }]}>
           {movie.genre.toUpperCase()}
         </Text>
-        <Text style={styles.title}>{movie.title}</Text>
-        <Text style={styles.meta}>
+        <Text style={[styles.title, { color: colors.foreground }]}>{movie.title}</Text>
+        <Text style={[styles.meta, { color: colors.mutedForeground }]}>
           {movie.year} · {movie.duration} · ★ {movie.rating}
         </Text>
         <View style={styles.actions}>
           <TouchableOpacity
-            style={[styles.playBtn, { backgroundColor: colors.primary }]}
+            style={[
+              styles.playBtn,
+              {
+                backgroundColor: colors.primary,
+                shadowColor: colors.primary,
+                shadowOpacity: 0.75,
+                shadowRadius: 14,
+                shadowOffset: { width: 0, height: 0 },
+                elevation: 10,
+              },
+            ]}
             onPress={() => router.push(`/movie/${movie.id}` as never)}
             activeOpacity={0.8}
           >
-            <Feather name="play" size={18} color="#fff" />
-            <Text style={styles.playText}>Play</Text>
+            <Feather name="play" size={18} color={colors.primaryForeground} />
+            <Text style={[styles.playText, { color: colors.primaryForeground }]}>Play</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.infoBtn}
             onPress={() => router.push(`/movie/${movie.id}` as never)}
             activeOpacity={0.8}
           >
-            <Feather name="info" size={18} color="#fff" />
-            <Text style={styles.infoText}>More Info</Text>
+            <Feather name="info" size={18} color={colors.foreground} />
+            <Text style={[styles.infoText, { color: colors.foreground }]}>More Info</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -90,7 +100,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 220,
-    backgroundColor: "rgba(15,15,15,0.85)",
+    opacity: 0.9,
   },
   content: {
     flex: 1,
@@ -105,13 +115,11 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   title: {
-    color: "#ffffff",
     fontSize: 30,
     fontFamily: "Inter_700Bold",
     marginBottom: 6,
   },
   meta: {
-    color: "rgba(255,255,255,0.55)",
     fontSize: 13,
     fontFamily: "Inter_400Regular",
     marginBottom: 18,
@@ -129,7 +137,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   playText: {
-    color: "#ffffff",
     fontSize: 15,
     fontFamily: "Inter_600SemiBold",
   },
@@ -143,7 +150,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.12)",
   },
   infoText: {
-    color: "#ffffff",
     fontSize: 15,
     fontFamily: "Inter_500Medium",
   },

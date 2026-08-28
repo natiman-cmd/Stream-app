@@ -11,7 +11,7 @@ import { useColors } from "@/hooks/useColors";
 
 function NativeTabLayout() {
   return (
-    <NativeTabs>
+    <NativeTabs tintColor="#00f0ff">
       <NativeTabs.Trigger name="index">
         <Icon sf={{ default: "house", selected: "house.fill" }} />
         <Label>Home</Label>
@@ -46,7 +46,7 @@ function ClassicTabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.primary,
+      tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.mutedForeground,
         headerShown: false,
         tabBarStyle: {
@@ -55,6 +55,9 @@ function ClassicTabLayout() {
           borderTopWidth: isWeb ? 1 : 0,
           borderTopColor: colors.border,
           elevation: 0,
+          shadowColor: colors.primary,
+          shadowOpacity: 0.18,
+          shadowRadius: 12,
           ...(isWeb ? { height: 84 } : {}),
         },
         tabBarBackground: () =>

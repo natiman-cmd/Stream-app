@@ -114,6 +114,15 @@ export default function SearchScreen() {
                 {
                   backgroundColor:
                     selectedGenre === g ? colors.primary : colors.secondary,
+                    ...(selectedGenre === g
+                      ? {
+                          shadowColor: colors.primary,
+                          shadowOpacity: 0.65,
+                          shadowRadius: 8,
+                          shadowOffset: { width: 0, height: 0 },
+                          elevation: 7,
+                        }
+                      : {}),
                 },
               ]}
             >

@@ -107,7 +107,7 @@ export default function ProfileScreen() {
               onPress={confirmEdit}
               activeOpacity={0.8}
             >
-              <Feather name="check" size={16} color="#fff" />
+              <Feather name="check" size={16} color={colors.primaryForeground} />
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.cancelBtn, { backgroundColor: colors.secondary }]}
@@ -227,7 +227,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   avatarText: {
-    color: "#fff",
     fontSize: 36,
     fontFamily: "Inter_700Bold",
   },

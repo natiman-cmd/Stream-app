@@ -106,7 +106,18 @@ export default function OnboardingScreen() {
         testID="onboarding-continue-button"
         style={[
           styles.button,
-          { backgroundColor: canContinue ? colors.primary : colors.secondary },
+          {
+            backgroundColor: canContinue ? colors.primary : colors.secondary,
+            ...(canContinue
+              ? {
+                  shadowColor: colors.primary,
+                  shadowOpacity: 0.7,
+                  shadowRadius: 14,
+                  shadowOffset: { width: 0, height: 0 },
+                  elevation: 10,
+                }
+              : {}),
+          },
         ]}
         onPress={finish}
         activeOpacity={0.85}

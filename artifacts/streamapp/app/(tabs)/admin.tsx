@@ -149,7 +149,18 @@ export default function AdminScreen() {
         />
         <TouchableOpacity
           testID="admin-unlock-button"
-          style={[styles.primaryButton, { backgroundColor: colors.primary, opacity: password.trim().length >= 4 ? 1 : 0.5 }]}
+          style={[
+            styles.primaryButton,
+            {
+              backgroundColor: colors.primary,
+              opacity: password.trim().length >= 4 ? 1 : 0.5,
+              shadowColor: colors.primary,
+              shadowOpacity: 0.65,
+              shadowRadius: 12,
+              shadowOffset: { width: 0, height: 0 },
+              elevation: 8,
+            },
+          ]}
           onPress={submitPassword}
           disabled={password.trim().length < 4}
         >
@@ -201,7 +212,20 @@ export default function AdminScreen() {
         <Field label="Poster Image URL" value={form.posterUrl} placeholder="https://..." onChange={(value) => setForm((prev) => ({ ...prev, posterUrl: value }))} colors={colors} keyboardType="url" />
         <Field label="Video URL" value={form.videoUrl} placeholder="https://..." onChange={(value) => setForm((prev) => ({ ...prev, videoUrl: value }))} colors={colors} keyboardType="url" />
         <Field label="Description" value={form.description} placeholder="Tell viewers about this movie" onChange={(value) => setForm((prev) => ({ ...prev, description: value }))} colors={colors} multiline />
-        <TouchableOpacity style={[styles.primaryButton, { backgroundColor: colors.primary }]} onPress={saveMovie}>
+        <TouchableOpacity
+          style={[
+            styles.primaryButton,
+            {
+              backgroundColor: colors.primary,
+              shadowColor: colors.primary,
+              shadowOpacity: 0.65,
+              shadowRadius: 12,
+              shadowOffset: { width: 0, height: 0 },
+              elevation: 8,
+            },
+          ]}
+          onPress={saveMovie}
+        >
           <Feather name={editingId ? "check" : "plus"} size={18} color={colors.primaryForeground} />
           <Text style={[styles.primaryButtonText, { color: colors.primaryForeground }]}>
             {editingId ? "Save changes" : "Add movie"}

@@ -93,7 +93,7 @@ export default function MovieDetailScreen() {
             onPress={() => router.back()}
             activeOpacity={0.8}
           >
-            <Feather name="arrow-left" size={22} color="#fff" />
+              <Feather name="arrow-left" size={22} color={colors.foreground} />
           </TouchableOpacity>
         </View>
 
@@ -112,12 +112,22 @@ export default function MovieDetailScreen() {
           {/* Actions */}
           <View style={styles.actions}>
             <TouchableOpacity
-              style={[styles.playBtn, { backgroundColor: colors.primary }]}
+              style={[
+                styles.playBtn,
+                {
+                  backgroundColor: colors.primary,
+                  shadowColor: colors.primary,
+                  shadowOpacity: 0.75,
+                  shadowRadius: 14,
+                  shadowOffset: { width: 0, height: 0 },
+                  elevation: 10,
+                },
+              ]}
               onPress={handlePlay}
               activeOpacity={0.8}
             >
-              <Feather name="play" size={20} color="#fff" />
-              <Text style={styles.playText}>Play Now</Text>
+              <Feather name="play" size={20} color={colors.primaryForeground} />
+              <Text style={[styles.playText, { color: colors.primaryForeground }]}>Play Now</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -134,7 +144,7 @@ export default function MovieDetailScreen() {
               <Feather
                 name="bookmark"
                 size={20}
-                color={bookmarked ? "#fff" : colors.foreground}
+                color={bookmarked ? colors.primaryForeground : colors.foreground}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -150,7 +160,7 @@ export default function MovieDetailScreen() {
             <View
               style={[
                 styles.savedBadge,
-                { backgroundColor: "rgba(229, 9, 20, 0.12)" },
+                { backgroundColor: "rgba(0, 240, 255, 0.12)" },
               ]}
             >
               <Feather name="check" size={14} color={colors.primary} />
@@ -261,7 +271,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   playText: {
-    color: "#fff",
     fontSize: 16,
     fontFamily: "Inter_600SemiBold",
   },
