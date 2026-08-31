@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "MtIcTc1xMArmZPmVEv3AC"
@@ -24,3 +23,17 @@ id = "glU6_b3FjZ5xLesL4XHIh"
 uri = "file://artifacts/streamapp/assets/images/poster-drama.png"
 type = "image"
 title = "drama movie poster"
+
+[[outputs]]
+id = "aYKRjDBqbgiiZhLi5DFcw"
+uri = "file://StreamApp-Expo-source.zip"
+type = "unspecified"
+title = "StreamApp Expo source code"
+description = "Complete portable Expo source archive for building the standalone Android APK outside Replit. Includes EAS configuration, source code, assets, and build instructions; excludes dependencies, generated builds, environment files, and Replit-only metadata."
+
+[[outputs]]
+id = "sOkZ7WCqQLMLCh9X3CjT_"
+uri = "file://StreamApp-web-build.zip"
+type = "unspecified"
+title = "StreamApp web/PWA build"
+description = "Host-ready Expo web export for Vercel or Netlify, including PWA manifest, service worker, SPA fallbacks, icons, and production web assets."
