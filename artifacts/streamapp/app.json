@@ -19,6 +19,11 @@
     "android": {
       "package": "com.streamapp.app"
     },
+    "extra": {
+      "eas": {
+        "projectId": "cca6bbdb-45f7-4b1c-b82f-3e229467c3d7"
+      }
+    },
     "web": {
       "bundler": "metro",
       "output": "single",
