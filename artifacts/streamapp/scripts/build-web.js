@@ -25,7 +25,7 @@ function injectPwaHead() {
 
   if (!html.includes('rel="manifest"')) {
     const headTags = [
-      '<meta name="description" content="StreamApp is a personal movie streaming experience for discovering and saving films." />',
+      '<meta name="description" content="Neon Stakes is a play-money casino demo with virtual credits and quick games." />',
       '<meta name="theme-color" content="#00f0ff" />',
       '<meta name="mobile-web-app-capable" content="yes" />',
       '<meta name="apple-mobile-web-app-capable" content="yes" />',
@@ -40,7 +40,7 @@ function injectPwaHead() {
   }
 }
 
-console.log("Exporting StreamApp for web hosting...");
+console.log("Exporting Neon Stakes for web hosting...");
 
 if (fs.existsSync(outputDir)) {
   fs.rmSync(outputDir, { recursive: true, force: true });

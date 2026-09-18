@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 
-const STORAGE_KEY = "@streamapp/profile";
+const STORAGE_KEY = "@streamapp/player-profile";
 
 interface Profile {
   name: string;
@@ -23,8 +23,8 @@ interface ProfileContextValue {
 }
 
 const DEFAULT_PROFILE: Profile = {
-  name: "Your Name",
-  plan: "Premium",
+  name: "New Player",
+  plan: "Player",
 };
 
 const ProfileContext = createContext<ProfileContextValue | null>(null);

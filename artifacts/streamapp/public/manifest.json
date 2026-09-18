@@ -1,12 +1,12 @@
 {
-  "name": "StreamApp",
-  "short_name": "StreamApp",
-  "description": "A personal movie streaming experience for discovering and saving films.",
+  "name": "Neon Stakes",
+  "short_name": "Neon Stakes",
+  "description": "A play-money casino demo with virtual credits, quick games, and transparent round history.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#030914",
+  "background_color": "#070914",
   "theme_color": "#00f0ff",
   "icons": [
     {

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "StreamApp",
-    "slug": "streamapp",
+    "name": "Neon Stakes",
+    "slug": "neon-stakes",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "streamapp",
+    "scheme": "neonstakes",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {

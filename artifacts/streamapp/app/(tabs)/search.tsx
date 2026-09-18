@@ -1,5 +1,5 @@
 import { Feather } from "@expo/vector-icons";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   FlatList,
   Platform,
@@ -11,168 +11,95 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { MovieCard } from "@/components/MovieCard";
-import { useCatalog } from "@/context/CatalogContext";
+import { CasinoGameCard } from "@/components/CasinoGameCard";
+import { GAMES } from "@/data/games";
 import { useColors } from "@/hooks/useColors";
 
-const GENRES = ["All", "Sci-Fi", "Action", "Drama"];
+const CATEGORIES = ["All", "Quick Play", "Featured Table", "High Multiplier"];
 
-function HighlightText({
-  text,
-  query,
-  baseColor,
-  highlightColor,
-}: {
-  text: string;
-  query: string;
-  baseColor: string;
-  highlightColor: string;
-}) {
-  if (!query) {
-    return (
-      <Text style={{ color: baseColor, fontSize: 11, fontFamily: "Inter_500Medium" }} numberOfLines={1}>
-        {text}
-      </Text>
-    );
-  }
-
-  const idx = text.toLowerCase().indexOf(query.toLowerCase());
-  if (idx === -1) {
-    return (
-      <Text style={{ color: baseColor, fontSize: 11, fontFamily: "Inter_500Medium" }} numberOfLines={1}>
-        {text}
-      </Text>
-    );
-  }
-
-  const before = text.slice(0, idx);
-  const match = text.slice(idx, idx + query.length);
-  const after = text.slice(idx + query.length);
-
-  return (
-    <Text style={{ fontSize: 11, fontFamily: "Inter_500Medium" }} numberOfLines={1}>
-      <Text style={{ color: baseColor }}>{before}</Text>
-      <Text style={{ color: highlightColor, fontFamily: "Inter_700Bold" }}>{match}</Text>
-      <Text style={{ color: baseColor }}>{after}</Text>
-    </Text>
-  );
-}
-
-export default function SearchScreen() {
+export default function GamesScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const [query, setQuery] = useState("");
-  const [selectedGenre, setSelectedGenre] = useState("All");
-  const inputRef = useRef<TextInput>(null);
-  const { movies } = useCatalog();
-
+  const [category, setCategory] = useState("All");
   const topPadding = Platform.OS === "web" ? 67 : insets.top + 12;
 
-  const filtered = movies.filter((m) => {
-    const matchesQuery =
-      query === "" || m.title.toLowerCase().includes(query.toLowerCase());
-    const matchesGenre = selectedGenre === "All" || m.genre === selectedGenre;
-    return matchesQuery && matchesGenre;
-  });
-
-  const resultLabel =
-    query.length > 0 || selectedGenre !== "All"
-      ? `${filtered.length} result${filtered.length !== 1 ? "s" : ""}`
-      : `${movies.length} movies`;
+  const filtered = useMemo(
+    () =>
+      GAMES.filter((game) => {
+        const matchesQuery =
+          !query ||
+          game.title.toLowerCase().includes(query.toLowerCase()) ||
+          game.description.toLowerCase().includes(query.toLowerCase());
+        const matchesCategory = category === "All" || game.category === category;
+        return matchesQuery && matchesCategory;
+      }),
+    [query, category],
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { paddingTop: topPadding }]}>
+        <Text style={[styles.eyebrow, { color: colors.primary }]}>THE FLOOR</Text>
+        <Text style={[styles.title, { color: colors.foreground }]}>Choose your game</Text>
+        <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
+          Every table uses free virtual credits. No deposits, no withdrawals.
+        </Text>
         <View style={[styles.searchBar, { backgroundColor: colors.secondary }]}>
           <Feather name="search" size={18} color={colors.mutedForeground} />
           <TextInput
-            ref={inputRef}
             style={[styles.input, { color: colors.foreground }]}
-            placeholder="Search movies..."
+            placeholder="Search games..."
             placeholderTextColor={colors.mutedForeground}
             value={query}
             onChangeText={setQuery}
             autoCorrect={false}
             autoCapitalize="none"
-            returnKeyType="search"
             clearButtonMode="while-editing"
           />
-          {query.length > 0 && Platform.OS !== "ios" && (
+          {query.length > 0 && (
             <TouchableOpacity onPress={() => setQuery("")}>
               <Feather name="x" size={18} color={colors.mutedForeground} />
             </TouchableOpacity>
           )}
         </View>
-
-        <View style={styles.genreRow}>
-          {GENRES.map((g) => (
+        <FlatList
+          horizontal
+          data={CATEGORIES}
+          keyExtractor={(item) => item}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoryList}
+          renderItem={({ item }) => (
             <TouchableOpacity
-              key={g}
-              onPress={() => setSelectedGenre(g)}
+              onPress={() => setCategory(item)}
               style={[
-                styles.genrePill,
-                {
-                  backgroundColor:
-                    selectedGenre === g ? colors.primary : colors.secondary,
-                    ...(selectedGenre === g
-                      ? {
-                          shadowColor: colors.primary,
-                          shadowOpacity: 0.65,
-                          shadowRadius: 8,
-                          shadowOffset: { width: 0, height: 0 },
-                          elevation: 7,
-                        }
-                      : {}),
-                },
+                styles.categoryPill,
+                { backgroundColor: category === item ? colors.primary : colors.secondary },
               ]}
+              activeOpacity={0.8}
             >
-              <Text style={[styles.genreText, { color: colors.foreground }]}>
-                {g}
+              <Text style={[styles.categoryText, { color: category === item ? colors.primaryForeground : colors.foreground }]}>
+                {item}
               </Text>
             </TouchableOpacity>
-          ))}
-        </View>
-
+          )}
+        />
         <Text style={[styles.resultCount, { color: colors.mutedForeground }]}>
-          {resultLabel}
+          {filtered.length} table{filtered.length === 1 ? "" : "s"} available
         </Text>
       </View>
-
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
-        numColumns={3}
         showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-        scrollEnabled={!!filtered.length}
-        contentContainerStyle={[
-          styles.grid,
-          {
-            paddingBottom:
-              insets.bottom + (Platform.OS === "web" ? 34 : 90),
-          },
-        ]}
-        renderItem={({ item }) => (
-          <View style={styles.gridItem}>
-            <MovieCard movie={item} width={106} height={156} showMeta={false} />
-            <HighlightText
-              text={item.title}
-              query={query}
-              baseColor={colors.mutedForeground}
-              highlightColor={colors.foreground}
-            />
-          </View>
-        )}
+        contentContainerStyle={[styles.list, { paddingBottom: insets.bottom + (Platform.OS === "web" ? 34 : 90) }]}
+        renderItem={({ item }) => <CasinoGameCard game={item} />}
+        ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
         ListEmptyComponent={
           <View style={styles.empty}>
-            <Feather name="film" size={48} color={colors.mutedForeground} />
-            <Text style={[styles.emptyTitle, { color: colors.foreground }]}>
-              No results
-            </Text>
-            <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>
-              Try a different title or genre
-            </Text>
+            <Feather name="search" size={44} color={colors.mutedForeground} />
+            <Text style={[styles.emptyTitle, { color: colors.foreground }]}>No games found</Text>
+            <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>Try a different search or category.</Text>
           </View>
         }
       />
@@ -182,65 +109,18 @@ export default function SearchScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: {
-    paddingHorizontal: 16,
-    paddingBottom: 4,
-  },
-  searchBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    height: 44,
-    gap: 8,
-    marginBottom: 12,
-  },
-  input: {
-    flex: 1,
-    fontSize: 15,
-    fontFamily: "Inter_400Regular",
-  },
-  genreRow: {
-    flexDirection: "row",
-    gap: 8,
-    marginBottom: 10,
-  },
-  genrePill: {
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 20,
-  },
-  genreText: {
-    fontSize: 13,
-    fontFamily: "Inter_500Medium",
-  },
-  resultCount: {
-    fontSize: 12,
-    fontFamily: "Inter_400Regular",
-    marginBottom: 8,
-  },
-  grid: {
-    paddingHorizontal: 12,
-    paddingTop: 4,
-  },
-  gridItem: {
-    flex: 1,
-    margin: 4,
-    maxWidth: "33.33%",
-    gap: 5,
-  },
-  empty: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 80,
-    gap: 8,
-  },
-  emptyTitle: {
-    fontSize: 18,
-    fontFamily: "Inter_600SemiBold",
-  },
-  emptyText: {
-    fontSize: 14,
-    fontFamily: "Inter_400Regular",
-  },
+  header: { paddingHorizontal: 20, paddingBottom: 8 },
+  eyebrow: { fontSize: 10, letterSpacing: 2, fontFamily: "Inter_700Bold" },
+  title: { fontSize: 28, fontFamily: "Inter_700Bold", marginTop: 5 },
+  subtitle: { fontSize: 13, lineHeight: 19, fontFamily: "Inter_400Regular", marginTop: 6, maxWidth: 330 },
+  searchBar: { flexDirection: "row", alignItems: "center", borderRadius: 12, paddingHorizontal: 12, height: 46, gap: 8, marginTop: 18 },
+  input: { flex: 1, fontSize: 15, fontFamily: "Inter_400Regular" },
+  categoryList: { gap: 8, paddingTop: 14 },
+  categoryPill: { paddingHorizontal: 13, paddingVertical: 8, borderRadius: 18 },
+  categoryText: { fontSize: 12, fontFamily: "Inter_600SemiBold" },
+  resultCount: { fontSize: 12, fontFamily: "Inter_400Regular", marginTop: 12, marginBottom: 8 },
+  list: { paddingHorizontal: 20, paddingTop: 5 },
+  empty: { alignItems: "center", paddingTop: 80, gap: 9 },
+  emptyTitle: { fontSize: 19, fontFamily: "Inter_700Bold" },
+  emptyText: { fontSize: 14, fontFamily: "Inter_400Regular" },
 });

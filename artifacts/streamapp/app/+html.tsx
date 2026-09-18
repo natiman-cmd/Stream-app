@@ -16,7 +16,7 @@ export default function Root({ children }: PropsWithChildren) {
         />
         <meta
           name="description"
-          content="StreamApp is a personal movie streaming experience for discovering and saving films."
+          content="Neon Stakes is a play-money casino demo with virtual credits and quick games."
         />
         <meta name="theme-color" content="#00f0ff" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@ export default function Root({ children }: PropsWithChildren) {
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icon.png" />
         <link rel="icon" href="/icon.png" />
-        <title>StreamApp</title>
+        <title>Neon Stakes</title>
         <ScrollViewStyleReset />
       </head>
       <body>{children}</body>

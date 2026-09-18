@@ -1,43 +1,29 @@
 import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import React, { useRef, useState } from "react";
-import {
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useCasino } from "@/context/CasinoContext";
 import { useProfile } from "@/context/ProfileContext";
-import { useCatalog } from "@/context/CatalogContext";
-import { useWatchlist } from "@/context/WatchlistContext";
+import { formatCredits } from "@/data/games";
 import { useColors } from "@/hooks/useColors";
 
-const MENU_ITEMS: { icon: string; label: string }[] = [
-  { icon: "bell", label: "Notifications" },
-  { icon: "download", label: "Downloads" },
-  { icon: "settings", label: "Settings" },
-  { icon: "help-circle", label: "Help & Support" },
+const MENU_ITEMS: { icon: keyof typeof Feather.glyphMap; label: string; detail: string }[] = [
+  { icon: "gift", label: "Daily bonus", detail: "Claim free credits once a day" },
+  { icon: "shield", label: "Responsible play", detail: "Play-money limits and reminders" },
+  { icon: "info", label: "About Neon Stakes", detail: "An entertainment-only demo" },
 ];
 
 export default function ProfileScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { profile, updateName } = useProfile();
-  const { watchlist } = useWatchlist();
-  const { movies } = useCatalog();
-  const inProgressCount = movies.filter((movie) => movie.progress !== undefined).length;
+  const { balance, totalRounds, wins, resetCasino } = useCasino();
   const topPadding = Platform.OS === "web" ? 67 : insets.top + 12;
-
   const [editing, setEditing] = useState(false);
   const [draftName, setDraftName] = useState(profile.name);
   const inputRef = useRef<TextInput>(null);
-
-  const avatarLetter = (profile.name || "?")[0].toUpperCase();
 
   const startEditing = () => {
     setDraftName(profile.name);
@@ -52,287 +38,109 @@ export default function ProfileScreen() {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   };
 
-  const cancelEdit = () => {
-    setDraftName(profile.name);
-    setEditing(false);
-  };
-
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.background }]}
-      contentContainerStyle={{
-        paddingTop: topPadding,
-        paddingBottom: insets.bottom + (Platform.OS === "web" ? 34 : 90),
-      }}
+      contentContainerStyle={{ paddingTop: topPadding, paddingBottom: insets.bottom + (Platform.OS === "web" ? 34 : 90) }}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
-      {/* Avatar + Name */}
       <View style={styles.profileSection}>
-        <View style={[styles.avatarWrapper]}>
-          <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
-            <Text style={styles.avatarText}>{avatarLetter}</Text>
-          </View>
-          <TouchableOpacity
-            style={[styles.avatarEditBtn, { backgroundColor: colors.secondary, borderColor: colors.background }]}
-            onPress={startEditing}
-            activeOpacity={0.8}
-          >
-            <Feather name="edit-2" size={11} color={colors.foreground} />
-          </TouchableOpacity>
+        <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
+          <Text style={[styles.avatarText, { color: colors.primaryForeground }]}>{(profile.name || "?")[0].toUpperCase()}</Text>
         </View>
-
         {editing ? (
           <View style={styles.nameEditRow}>
             <TextInput
               ref={inputRef}
-              style={[
-                styles.nameInput,
-                {
-                  color: colors.foreground,
-                  backgroundColor: colors.secondary,
-                  borderColor: colors.primary,
-                },
-              ]}
+              style={[styles.nameInput, { color: colors.foreground, backgroundColor: colors.secondary, borderColor: colors.primary }]}
               value={draftName}
               onChangeText={setDraftName}
               onSubmitEditing={confirmEdit}
               returnKeyType="done"
-              autoCorrect={false}
               maxLength={30}
               selectTextOnFocus
             />
-            <TouchableOpacity
-              style={[styles.confirmBtn, { backgroundColor: colors.primary }]}
-              onPress={confirmEdit}
-              activeOpacity={0.8}
-            >
-              <Feather name="check" size={16} color={colors.primaryForeground} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.cancelBtn, { backgroundColor: colors.secondary }]}
-              onPress={cancelEdit}
-              activeOpacity={0.8}
-            >
-              <Feather name="x" size={16} color={colors.mutedForeground} />
+            <TouchableOpacity style={[styles.iconButton, { backgroundColor: colors.primary }]} onPress={confirmEdit}>
+              <Feather name="check" size={17} color={colors.primaryForeground} />
             </TouchableOpacity>
           </View>
         ) : (
-          <TouchableOpacity
-            style={styles.nameRow}
-            onPress={startEditing}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.name, { color: colors.foreground }]}>
-              {profile.name}
-            </Text>
+          <TouchableOpacity style={styles.nameRow} onPress={startEditing} activeOpacity={0.7}>
+            <Text style={[styles.name, { color: colors.foreground }]}>{profile.name}</Text>
             <Feather name="edit-2" size={14} color={colors.mutedForeground} />
           </TouchableOpacity>
         )}
-
-        <Text style={[styles.plan, { color: colors.primary }]}>
-          {profile.plan} Plan
-        </Text>
+        <Text style={[styles.memberLabel, { color: colors.primary }]}>PLAY-MONEY MEMBER</Text>
+        <Text style={[styles.memberNote, { color: colors.mutedForeground }]}>No payments or cash prizes</Text>
       </View>
 
-      {/* Stats */}
-      <View style={[styles.statsRow, { backgroundColor: colors.card }]}>
-        <View style={styles.statItem}>
-          <Text style={[styles.statNumber, { color: colors.foreground }]}>
-            {watchlist.length}
-          </Text>
-          <Text style={[styles.statLabel, { color: colors.mutedForeground }]}>
-            Saved
-          </Text>
-        </View>
-        <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
-        <View style={styles.statItem}>
-          <Text style={[styles.statNumber, { color: colors.foreground }]}>
-            {inProgressCount}
-          </Text>
-          <Text style={[styles.statLabel, { color: colors.mutedForeground }]}>
-            In Progress
-          </Text>
-        </View>
-        <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
-        <View style={styles.statItem}>
-          <Text style={[styles.statNumber, { color: colors.foreground }]}>
-            12
-          </Text>
-          <Text style={[styles.statLabel, { color: colors.mutedForeground }]}>
-            Available
-          </Text>
-        </View>
+      <View style={[styles.statsCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        <View style={styles.stat}><Text style={[styles.statValue, { color: colors.foreground }]}>{formatCredits(balance)}</Text><Text style={[styles.statLabel, { color: colors.mutedForeground }]}>Balance</Text></View>
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        <View style={styles.stat}><Text style={[styles.statValue, { color: colors.foreground }]}>{totalRounds}</Text><Text style={[styles.statLabel, { color: colors.mutedForeground }]}>Rounds</Text></View>
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        <View style={styles.stat}><Text style={[styles.statValue, { color: colors.success }]}>{wins}</Text><Text style={[styles.statLabel, { color: colors.mutedForeground }]}>Wins</Text></View>
       </View>
 
-      {/* Menu */}
-      <View style={[styles.card, { backgroundColor: colors.card }]}>
-        {MENU_ITEMS.map((item, i) => (
+      <View style={[styles.menuCard, { backgroundColor: colors.card }]}>
+        {MENU_ITEMS.map((item, index) => (
           <TouchableOpacity
             key={item.label}
-            style={[
-              styles.menuItem,
-              i < MENU_ITEMS.length - 1 && {
-                borderBottomWidth: StyleSheet.hairlineWidth,
-                borderBottomColor: colors.border,
-              },
-            ]}
-            activeOpacity={0.7}
+            style={[styles.menuItem, index < MENU_ITEMS.length - 1 && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border }]}
+            activeOpacity={0.75}
           >
-            <Feather
-              name={item.icon as keyof typeof Feather.glyphMap}
-              size={20}
-              color={colors.foreground}
-            />
-            <Text style={[styles.menuLabel, { color: colors.foreground }]}>
-              {item.label}
-            </Text>
-            <Feather
-              name="chevron-right"
-              size={18}
-              color={colors.mutedForeground}
-            />
+            <View style={[styles.menuIcon, { backgroundColor: colors.secondary }]}>
+              <Feather name={item.icon} size={18} color={colors.primary} />
+            </View>
+            <View style={styles.menuCopy}>
+              <Text style={[styles.menuLabel, { color: colors.foreground }]}>{item.label}</Text>
+              <Text style={[styles.menuDetail, { color: colors.mutedForeground }]}>{item.detail}</Text>
+            </View>
+            <Feather name="chevron-right" size={17} color={colors.mutedForeground} />
           </TouchableOpacity>
         ))}
       </View>
 
       <TouchableOpacity
-        style={[styles.signOutBtn, { backgroundColor: colors.card }]}
-        activeOpacity={0.7}
+        style={[styles.resetButton, { backgroundColor: colors.secondary }]}
+        onPress={resetCasino}
+        activeOpacity={0.8}
       >
-        <Text style={[styles.signOutText, { color: colors.destructive }]}>
-          Sign Out
-        </Text>
+        <Feather name="refresh-cw" size={16} color={colors.destructive} />
+        <Text style={[styles.resetText, { color: colors.destructive }]}>Reset demo credits</Text>
       </TouchableOpacity>
+      <Text style={[styles.disclaimer, { color: colors.mutedForeground }]}>
+        Neon Stakes is a simulated casino experience. Credits are fictional, have no monetary value, and cannot be exchanged or withdrawn.
+      </Text>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  profileSection: {
-    alignItems: "center",
-    paddingVertical: 24,
-    gap: 10,
-  },
-  avatarWrapper: {
-    position: "relative",
-    marginBottom: 4,
-  },
-  avatar: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  avatarText: {
-    fontSize: 36,
-    fontFamily: "Inter_700Bold",
-  },
-  avatarEditBtn: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    borderWidth: 2,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  nameRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-  },
-  name: {
-    fontSize: 22,
-    fontFamily: "Inter_600SemiBold",
-  },
-  nameEditRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    paddingHorizontal: 20,
-  },
-  nameInput: {
-    flex: 1,
-    height: 42,
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    fontSize: 16,
-    fontFamily: "Inter_500Medium",
-    borderWidth: 1.5,
-  },
-  confirmBtn: {
-    width: 42,
-    height: 42,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  cancelBtn: {
-    width: 42,
-    height: 42,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  plan: {
-    fontSize: 14,
-    fontFamily: "Inter_500Medium",
-  },
-  statsRow: {
-    flexDirection: "row",
-    marginHorizontal: 16,
-    borderRadius: 12,
-    marginBottom: 16,
-    paddingVertical: 16,
-  },
-  statItem: {
-    flex: 1,
-    alignItems: "center",
-    gap: 4,
-  },
-  statNumber: {
-    fontSize: 22,
-    fontFamily: "Inter_700Bold",
-  },
-  statLabel: {
-    fontSize: 12,
-    fontFamily: "Inter_400Regular",
-  },
-  statDivider: {
-    width: StyleSheet.hairlineWidth,
-    marginVertical: 4,
-  },
-  card: {
-    marginHorizontal: 16,
-    borderRadius: 12,
-    overflow: "hidden",
-    marginBottom: 16,
-  },
-  menuItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 15,
-    gap: 14,
-  },
-  menuLabel: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: "Inter_400Regular",
-  },
-  signOutBtn: {
-    marginHorizontal: 16,
-    borderRadius: 12,
-    paddingVertical: 15,
-    alignItems: "center",
-  },
-  signOutText: {
-    fontSize: 16,
-    fontFamily: "Inter_500Medium",
-  },
+  profileSection: { alignItems: "center", paddingVertical: 22, gap: 9 },
+  avatar: { width: 84, height: 84, borderRadius: 42, alignItems: "center", justifyContent: "center" },
+  avatarText: { fontSize: 34, fontFamily: "Inter_700Bold" },
+  nameRow: { flexDirection: "row", alignItems: "center", gap: 7 },
+  name: { fontSize: 23, fontFamily: "Inter_700Bold" },
+  nameEditRow: { flexDirection: "row", alignItems: "center", gap: 8, paddingHorizontal: 20, width: "100%" },
+  nameInput: { flex: 1, height: 44, borderWidth: 1.5, borderRadius: 11, paddingHorizontal: 12, fontSize: 16, fontFamily: "Inter_500Medium" },
+  iconButton: { width: 44, height: 44, borderRadius: 11, alignItems: "center", justifyContent: "center" },
+  memberLabel: { fontSize: 10, letterSpacing: 1.5, fontFamily: "Inter_700Bold" },
+  memberNote: { fontSize: 12, fontFamily: "Inter_400Regular" },
+  statsCard: { marginHorizontal: 20, borderRadius: 17, borderWidth: 1, paddingVertical: 17, flexDirection: "row" },
+  stat: { flex: 1, alignItems: "center", gap: 4 },
+  statValue: { fontSize: 16, fontFamily: "Inter_700Bold" },
+  statLabel: { fontSize: 11, fontFamily: "Inter_400Regular" },
+  divider: { width: StyleSheet.hairlineWidth, marginVertical: 3 },
+  menuCard: { margin: 20, marginBottom: 12, borderRadius: 17, overflow: "hidden" },
+  menuItem: { flexDirection: "row", alignItems: "center", gap: 12, padding: 14 },
+  menuIcon: { width: 38, height: 38, borderRadius: 12, alignItems: "center", justifyContent: "center" },
+  menuCopy: { flex: 1, gap: 3 },
+  menuLabel: { fontSize: 14, fontFamily: "Inter_600SemiBold" },
+  menuDetail: { fontSize: 11, fontFamily: "Inter_400Regular" },
+  resetButton: { marginHorizontal: 20, borderRadius: 13, paddingVertical: 13, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 },
+  resetText: { fontSize: 13, fontFamily: "Inter_600SemiBold" },
+  disclaimer: { marginHorizontal: 28, marginTop: 20, textAlign: "center", fontSize: 11, lineHeight: 17, fontFamily: "Inter_400Regular" },
 });

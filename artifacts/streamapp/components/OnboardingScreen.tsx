@@ -53,27 +53,27 @@ export default function OnboardingScreen() {
     >
       <View style={styles.topRow}>
         <View style={[styles.logoMark, { backgroundColor: colors.primary }]}>
-          <Feather name="play" size={20} color={colors.primaryForeground} />
+          <Feather name="zap" size={20} color={colors.primaryForeground} />
         </View>
         <Text style={[styles.brand, { color: colors.foreground }]}>
-          StreamApp
+          Neon Stakes
         </Text>
       </View>
 
       <View style={styles.main}>
         <View style={[styles.welcomeIcon, { backgroundColor: colors.card }]}>
-          <Feather name="film" size={34} color={colors.primary} />
+          <Feather name="award" size={34} color={colors.primary} />
         </View>
         <Text style={[styles.title, { color: colors.foreground }]}>
-          Make it yours
+          Welcome to the table
         </Text>
         <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
-          Tell us your name and we’ll personalize your streaming experience.
+          Pick a player name and get 1,000 free credits to explore the games.
         </Text>
 
         <View style={styles.form}>
           <Text style={[styles.label, { color: colors.foreground }]}>
-            What should we call you?
+            Choose your player name
           </Text>
           <TextInput
             ref={inputRef}
@@ -88,7 +88,7 @@ export default function OnboardingScreen() {
             ]}
             value={name}
             onChangeText={setName}
-            placeholder="Enter your name"
+            placeholder="Enter a player name"
             placeholderTextColor={colors.mutedForeground}
             autoCapitalize="words"
             autoCorrect={false}
@@ -97,7 +97,7 @@ export default function OnboardingScreen() {
             maxLength={30}
           />
           <Text style={[styles.helper, { color: colors.mutedForeground }]}>
-            You can change this later from your Profile.
+            Entertainment only: credits have no cash value and cannot be withdrawn.
           </Text>
         </View>
       </View>
@@ -128,7 +128,7 @@ export default function OnboardingScreen() {
             { color: canContinue ? colors.primaryForeground : colors.mutedForeground },
           ]}
         >
-          Continue
+          Enter the lobby
         </Text>
         <Feather
           name="arrow-right"

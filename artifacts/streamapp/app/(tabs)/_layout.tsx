@@ -14,23 +14,19 @@ function NativeTabLayout() {
     <NativeTabs tintColor="#00f0ff">
       <NativeTabs.Trigger name="index">
         <Icon sf={{ default: "house", selected: "house.fill" }} />
-        <Label>Home</Label>
+        <Label>Lobby</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="search">
         <Icon sf={{ default: "magnifyingglass", selected: "magnifyingglass" }} />
-        <Label>Search</Label>
+        <Label>Games</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="mylist">
         <Icon sf={{ default: "bookmark", selected: "bookmark.fill" }} />
-        <Label>My List</Label>
+        <Label>Activity</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="profile">
         <Icon sf={{ default: "person", selected: "person.fill" }} />
         <Label>Profile</Label>
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="admin">
-        <Icon sf={{ default: "gear", selected: "gearshape.fill" }} />
-        <Label>Admin</Label>
       </NativeTabs.Trigger>
     </NativeTabs>
   );
@@ -80,7 +76,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Lobby",
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="house" tintColor={color} size={24} />
@@ -92,7 +88,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="search"
         options={{
-          title: "Search",
+          title: "Games",
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="magnifyingglass" tintColor={color} size={24} />
@@ -104,7 +100,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="mylist"
         options={{
-          title: "My List",
+          title: "Activity",
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="bookmark" tintColor={color} size={24} />
@@ -125,18 +121,7 @@ function ClassicTabLayout() {
             ),
         }}
       />
-      <Tabs.Screen
-        name="admin"
-        options={{
-          title: "Admin",
-          tabBarIcon: ({ color }) =>
-            isIOS ? (
-              <SymbolView name="gearshape" tintColor={color} size={24} />
-            ) : (
-              <Feather name="shield" size={22} color={color} />
-            ),
-        }}
-      />
+      <Tabs.Screen name="admin" options={{ href: null }} />
     </Tabs>
   );
 }
