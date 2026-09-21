@@ -14,7 +14,7 @@ export function PwaRegistration() {
     void navigator.serviceWorker
       .register("/service-worker.js")
       .catch((error: unknown) => {
-        console.warn("Neon Stakes PWA service worker registration failed", error);
+        console.warn("Nudrub Bet PWA service worker registration failed", error);
       });
   }, []);
 

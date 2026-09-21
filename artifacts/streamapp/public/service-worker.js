@@ -1,4 +1,4 @@
-const CACHE_NAME = "neon-stakes-shell-v1";
+const CACHE_NAME = "nudrub-bet-shell-v1";
 const APP_SHELL = ["/", "/manifest.json", "/icon.png"];
 
 self.addEventListener("install", (event) => {

@@ -1,7 +1,7 @@
 {
-  "name": "Neon Stakes",
-  "short_name": "Neon Stakes",
-  "description": "A play-money casino demo with virtual credits, quick games, and transparent round history.",
+  "name": "Nudrub Bet",
+  "short_name": "Nudrub Bet",
+  "description": "A responsible sportsbook demo with virtual odds, transparent bet slips, and sports coverage.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

@@ -15,7 +15,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PwaRegistration } from "@/components/PwaRegistration";
-import { CasinoProvider } from "@/context/CasinoContext";
+import { BettingProvider } from "@/context/BettingContext";
 import { ProfileProvider } from "@/context/ProfileContext";
 
 SplashScreen.preventAutoHideAsync();
@@ -54,13 +54,13 @@ export default function RootLayout() {
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <ProfileProvider>
-            <CasinoProvider>
+            <BettingProvider>
               <GestureHandlerRootView>
                 <KeyboardProvider>
                   <RootLayoutNav />
                 </KeyboardProvider>
               </GestureHandlerRootView>
-            </CasinoProvider>
+            </BettingProvider>
           </ProfileProvider>
         </QueryClientProvider>
       </ErrorBoundary>

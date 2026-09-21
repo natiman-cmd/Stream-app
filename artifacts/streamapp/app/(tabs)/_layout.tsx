@@ -14,15 +14,15 @@ function NativeTabLayout() {
     <NativeTabs tintColor="#00f0ff">
       <NativeTabs.Trigger name="index">
         <Icon sf={{ default: "house", selected: "house.fill" }} />
-        <Label>Lobby</Label>
+        <Label>Home</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="search">
         <Icon sf={{ default: "magnifyingglass", selected: "magnifyingglass" }} />
-        <Label>Games</Label>
+        <Label>Sports</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="mylist">
         <Icon sf={{ default: "bookmark", selected: "bookmark.fill" }} />
-        <Label>Activity</Label>
+        <Label>Bets</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="profile">
         <Icon sf={{ default: "person", selected: "person.fill" }} />
@@ -76,7 +76,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Lobby",
+          title: "Home",
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="house" tintColor={color} size={24} />
@@ -88,7 +88,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="search"
         options={{
-          title: "Games",
+          title: "Sports",
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="magnifyingglass" tintColor={color} size={24} />
@@ -100,7 +100,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="mylist"
         options={{
-          title: "Activity",
+          title: "Bets",
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="bookmark" tintColor={color} size={24} />
