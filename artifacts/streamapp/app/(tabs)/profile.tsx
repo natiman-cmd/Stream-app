@@ -3,6 +3,7 @@ import * as Haptics from "expo-haptics";
 import React, { useRef, useState } from "react";
 import { Alert, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 import { useBetting } from "@/context/BettingContext";
 import { useProfile } from "@/context/ProfileContext";
@@ -11,6 +12,7 @@ import { useColors } from "@/hooks/useColors";
 export default function ProfileScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { profile, updateName } = useProfile();
   const { balance, history } = useBetting();
   const [editing, setEditing] = useState(false);
@@ -43,7 +45,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         )}
         <Text style={[styles.accountLabel, { color: colors.accent }]}>NUDRUB BET DEMO ACCOUNT</Text>
-        <Text style={[styles.accountNote, { color: colors.mutedForeground }]}>Virtual balance · no cash value</Text>
+        <Text style={[styles.accountNote, { color: colors.mutedForeground }]}>Manual wallet · requests are reviewed before posting</Text>
       </View>
 
       <View style={[styles.stats, { backgroundColor: colors.card, borderColor: colors.border }]}>
@@ -53,6 +55,12 @@ export default function ProfileScreen() {
         <View style={[styles.divider, { backgroundColor: colors.border }]} />
         <View style={styles.stat}><Text style={[styles.statValue, { color: colors.accent }]}>Demo</Text><Text style={[styles.statLabel, { color: colors.mutedForeground }]}>Mode</Text></View>
       </View>
+
+      <TouchableOpacity style={[styles.walletLink, { backgroundColor: colors.secondary }]} onPress={() => router.push("/(tabs)/payments")}>
+        <View style={[styles.walletIcon, { backgroundColor: colors.accent }]}><Feather name="credit-card" size={17} color={colors.accentForeground} /></View>
+        <View style={styles.copy}><Text style={[styles.walletTitle, { color: colors.foreground }]}>Manage payments</Text><Text style={[styles.walletText, { color: colors.mutedForeground }]}>Deposit, withdraw, and track manual requests</Text></View>
+        <Feather name="chevron-right" size={16} color={colors.mutedForeground} />
+      </TouchableOpacity>
 
       <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Responsible gambling</Text>
       <View style={[styles.responsibleCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
@@ -68,7 +76,7 @@ export default function ProfileScreen() {
           <Feather name={item.icon} size={19} color={colors.primary} /><View style={styles.copy}><Text style={[styles.menuTitle, { color: colors.foreground }]}>{item.title}</Text><Text style={[styles.menuText, { color: colors.mutedForeground }]}>{item.text}</Text></View><Feather name="chevron-right" size={16} color={colors.mutedForeground} />
         </TouchableOpacity>
       ))}
-      <Text style={[styles.disclaimer, { color: colors.mutedForeground }]}>NUDRUB BET IS CURRENTLY A VIRTUAL-CREDITS DEMO. NO DEPOSITS, WITHDRAWALS, OR CASH PAYOUTS ARE AVAILABLE.</Text>
+      <Text style={[styles.disclaimer, { color: colors.mutedForeground }]}>PAYMENTS ARE MANUAL AND REQUIRE REVIEW. WAGERING REMAINS LOCKED UNTIL COMPLIANCE CONTROLS ARE CONFIGURED.</Text>
     </ScrollView>
   );
 }
@@ -100,4 +108,8 @@ const styles = StyleSheet.create({
   menuTitle: { fontSize: 13, fontFamily: "Inter_600SemiBold" },
   menuText: { fontSize: 11, lineHeight: 16, fontFamily: "Inter_400Regular" },
   disclaimer: { textAlign: "center", fontSize: 9, lineHeight: 15, letterSpacing: 0.5, marginTop: 24, fontFamily: "Inter_500Medium" },
+  walletLink: { borderRadius: 12, padding: 11, flexDirection: "row", alignItems: "center", gap: 10, marginTop: 14 },
+  walletIcon: { width: 35, height: 35, borderRadius: 10, alignItems: "center", justifyContent: "center" },
+  walletTitle: { fontSize: 13, fontFamily: "Inter_700Bold" },
+  walletText: { fontSize: 10, marginTop: 2 },
 });

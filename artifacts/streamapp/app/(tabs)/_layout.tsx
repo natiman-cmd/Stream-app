@@ -24,6 +24,10 @@ function NativeTabLayout() {
         <Icon sf={{ default: "bookmark", selected: "bookmark.fill" }} />
         <Label>Bets</Label>
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="payments">
+        <Icon sf={{ default: "creditcard", selected: "creditcard.fill" }} />
+        <Label>Wallet</Label>
+      </NativeTabs.Trigger>
       <NativeTabs.Trigger name="profile">
         <Icon sf={{ default: "person", selected: "person.fill" }} />
         <Label>Profile</Label>
@@ -106,6 +110,18 @@ function ClassicTabLayout() {
               <SymbolView name="bookmark" tintColor={color} size={24} />
             ) : (
               <Feather name="bookmark" size={22} color={color} />
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name="payments"
+        options={{
+          title: "Wallet",
+          tabBarIcon: ({ color }) =>
+            isIOS ? (
+              <SymbolView name="creditcard" tintColor={color} size={24} />
+            ) : (
+              <Feather name="credit-card" size={22} color={color} />
             ),
         }}
       />

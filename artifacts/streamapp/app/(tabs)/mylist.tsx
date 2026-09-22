@@ -42,7 +42,7 @@ export default function BetsScreen() {
       ListEmptyComponent={
         <View style={styles.empty}>
           <Feather name="file-text" size={40} color={colors.mutedForeground} />
-          <Text style={[styles.emptyTitle, { color: colors.foreground }]}>No demo bets yet</Text>
+          <Text style={[styles.emptyTitle, { color: colors.foreground }]}>No wagers yet</Text>
           <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>Your placed tickets will appear here.</Text>
         </View>
       }

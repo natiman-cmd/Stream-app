@@ -9,16 +9,19 @@ export function BetSlip({ compact = false }: { compact?: boolean }) {
   const colors = useColors();
   const { balance, slip, totalOdds, potentialReturn, removeSelection, placeDemoBet, clearSlip } = useBetting();
   const [stakeText, setStakeText] = useState("10");
+  const [submitting, setSubmitting] = useState(false);
   const stake = Number(stakeText) || 0;
 
-  const submit = () => {
-    const result = placeDemoBet(stake);
+  const submit = async () => {
+    setSubmitting(true);
+    const result = await placeDemoBet(stake);
+    setSubmitting(false);
     if (!result.ok) {
       Alert.alert("Bet slip", result.error);
       return;
     }
     setStakeText("10");
-    Alert.alert("Demo bet placed", "Your virtual stake was added to Bet History. No real money was used.");
+    Alert.alert("Wager placed", "Your stake was posted to the wallet.");
   };
 
   if (!slip.length) {
@@ -65,10 +68,10 @@ export function BetSlip({ compact = false }: { compact?: boolean }) {
         </View>
       </View>
       <TouchableOpacity style={[styles.button, { backgroundColor: colors.accent }]} onPress={submit} activeOpacity={0.84}>
-        <Text style={[styles.buttonText, { color: colors.accentForeground }]}>Place demo bet</Text>
+        <Text style={[styles.buttonText, { color: colors.accentForeground }]}>{submitting ? "Submitting…" : "Place wager"}</Text>
         <Feather name="arrow-right" size={16} color={colors.accentForeground} />
       </TouchableOpacity>
-      {!compact && <Text style={[styles.disclaimer, { color: colors.mutedForeground }]}>Demo mode only · balance {balance.toLocaleString()} · no cash value</Text>}
+      {!compact && <Text style={[styles.disclaimer, { color: colors.mutedForeground }]}>Wallet balance {balance.toLocaleString()} ETB · wagers remain compliance-gated</Text>}
     </View>
   );
 }

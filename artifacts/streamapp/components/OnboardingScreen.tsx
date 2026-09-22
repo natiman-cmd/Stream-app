@@ -48,7 +48,7 @@ export default function OnboardingScreen() {
         </View>
         <Text style={[styles.title, { color: colors.foreground }]}>Your match day starts here</Text>
         <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
-          Follow the sports you love, build a demo bet slip, and keep every choice in one place.
+          Follow the sports you love, manage your wallet, and keep every choice in one place.
         </Text>
         <View style={styles.form}>
           <Text style={[styles.label, { color: colors.foreground }]}>Choose your display name</Text>
@@ -67,7 +67,7 @@ export default function OnboardingScreen() {
             maxLength={30}
           />
           <Text style={[styles.helper, { color: colors.mutedForeground }]}>
-            This version uses demo credits only. No deposits or withdrawals are enabled.
+            Deposits and withdrawals are submitted for manual review. Wagering remains compliance-gated.
           </Text>
         </View>
       </View>

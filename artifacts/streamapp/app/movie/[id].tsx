@@ -34,7 +34,7 @@ export default function MatchDetailScreen() {
         </View>
         <View style={styles.content}>
           <View style={styles.sectionRow}><Text style={[styles.sectionTitle, { color: colors.foreground }]}>Match result and markets</Text><TouchableOpacity onPress={() => Share.share({ message: `${match.home} vs ${match.away} on Nudrub Bet` })}><Feather name="share-2" size={18} color={colors.mutedForeground} /></TouchableOpacity></View>
-          <Text style={[styles.helper, { color: colors.mutedForeground }]}>Tap an odd to add it to your demo bet slip. One selection per match.</Text>
+          <Text style={[styles.helper, { color: colors.mutedForeground }]}>Tap an odd to add it to your bet slip. One selection per match.</Text>
           <View style={styles.marketGrid}>{match.markets.map((market) => <OddsButton key={market.id} match={match} market={market} />)}</View>
           <View style={[styles.slipNotice, { backgroundColor: colors.secondary }]}>
             <Feather name="file-text" size={17} color={colors.accent} />
@@ -44,7 +44,7 @@ export default function MatchDetailScreen() {
           <BetSlip compact />
           <View style={[styles.responsible, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <Feather name="shield" size={18} color={colors.success} />
-            <View style={styles.responsibleCopy}><Text style={[styles.responsibleTitle, { color: colors.foreground }]}>Responsible gambling</Text><Text style={[styles.responsibleText, { color: colors.mutedForeground }]}>Set a limit before you play, take breaks, and never chase losses. Nudrub Bet is in demo mode.</Text></View>
+            <View style={styles.responsibleCopy}><Text style={[styles.responsibleTitle, { color: colors.foreground }]}>Responsible gambling</Text><Text style={[styles.responsibleText, { color: colors.mutedForeground }]}>Set a limit before you play, take breaks, and never chase losses. Wallet actions are reviewed manually.</Text></View>
           </View>
         </View>
       </ScrollView>

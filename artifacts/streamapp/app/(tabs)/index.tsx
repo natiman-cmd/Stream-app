@@ -26,7 +26,7 @@ export default function HomeScreen() {
         <View style={[styles.header, { paddingTop: Platform.OS === "web" ? 67 : insets.top + 14 }]}>
           <View style={styles.brandRow}>
             <View style={[styles.logo, { backgroundColor: colors.accent }]}><Feather name="activity" size={20} color={colors.accentForeground} /></View>
-            <View><Text style={[styles.brand, { color: colors.foreground }]}>nudrub<Text style={{ color: colors.accent }}>bet</Text></Text><Text style={[styles.demo, { color: colors.mutedForeground }]}>DEMO SPORTSBOOK</Text></View>
+            <View><Text style={[styles.brand, { color: colors.foreground }]}>nudrub<Text style={{ color: colors.accent }}>bet</Text></Text><Text style={[styles.demo, { color: colors.mutedForeground }]}>SPORTSBOOK · MANUAL WALLET</Text></View>
           </View>
           <TouchableOpacity style={[styles.balance, { backgroundColor: colors.card, borderColor: colors.border }]} onPress={() => router.push("/(tabs)/profile")}>
             <Feather name="credit-card" size={14} color={colors.accent} />
@@ -65,10 +65,10 @@ export default function HomeScreen() {
 
         <View style={[styles.responsibleCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <View style={[styles.responsibleIcon, { backgroundColor: colors.secondary }]}><Feather name="shield" size={20} color={colors.success} /></View>
-          <View style={styles.responsibleCopy}><Text style={[styles.responsibleTitle, { color: colors.foreground }]}>Play responsibly</Text><Text style={[styles.responsibleText, { color: colors.mutedForeground }]}>Set limits, take breaks, and keep betting fun. This app is currently in demo mode.</Text></View>
+          <View style={styles.responsibleCopy}><Text style={[styles.responsibleTitle, { color: colors.foreground }]}>Play responsibly</Text><Text style={[styles.responsibleText, { color: colors.mutedForeground }]}>Set limits, take breaks, and keep betting fun. Payment requests are reviewed manually.</Text></View>
           <Feather name="chevron-right" size={16} color={colors.mutedForeground} />
         </View>
-        <Text style={[styles.disclaimer, { color: colors.mutedForeground }]}>DEMO MODE · NO DEPOSITS · NO WITHDRAWALS · NO CASH PAYOUTS</Text>
+        <Text style={[styles.disclaimer, { color: colors.mutedForeground }]}>MANUAL PAYMENTS · OPERATOR REVIEW · RESPONSIBLE PLAY</Text>
         <Text style={[styles.greeting, { color: colors.mutedForeground }]}>Good luck, {profile.name}</Text>
       </ScrollView>
     </View>
